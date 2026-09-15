@@ -1,0 +1,15 @@
+.git
+.github
+.venv
+venv
+__pycache__
+**/__pycache__
+*.pyc
+*.db
+file_storage.db
+app/uploads
+.env
+.env.example
+*.md
+.vscode
+.idea

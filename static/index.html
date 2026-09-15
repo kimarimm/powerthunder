@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowerThunder</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <a href="#/" class="logo"><img src="/static/icons/lightning.png" alt="" class="logo-icon"> PowerThunder</a>
+      <nav class="nav">
+        <span id="user-info" class="user-info"></span>
+        <button id="logout-btn" class="btn btn-outline" style="display:none">Выйти</button>
+      </nav>
+    </header>
+
+    <main class="main">
+      <div id="page-login" class="page">
+        <section class="auth-card">
+          <h1>Вход</h1>
+          <form id="login-form">
+            <input type="text" name="username" placeholder="Имя пользователя" required autocomplete="username">
+            <input type="password" name="password" placeholder="Пароль" required autocomplete="current-password">
+            <button type="submit" class="btn btn-primary">Войти</button>
+          </form>
+          <p class="auth-switch">Нет аккаунта? <a href="#/register">Зарегистрироваться</a></p>
+        </section>
+      </div>
+
+      <div id="page-register" class="page">
+        <section class="auth-card">
+          <h1>Регистрация</h1>
+          <form id="register-form">
+            <input type="text" name="username" placeholder="Имя пользователя" required autocomplete="username">
+            <input type="email" name="email" placeholder="Email" required autocomplete="email">
+            <input type="password" name="password" placeholder="Пароль" required autocomplete="new-password">
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+          </form>
+          <p class="auth-switch">Уже есть аккаунт? <a href="#/login">Войти</a></p>
+        </section>
+      </div>
+
+      <div id="page-files" class="page">
+        <section class="files-section">
+          <div class="files-search-bar">
+            <input type="text" id="search-input" placeholder="Искать везде" autocomplete="off">
+          </div>
+          <div class="files-toolbar">
+            <button type="button" class="toolbar-btn" id="upload-trigger-btn">↑ Загрузить</button>
+            <button type="button" class="toolbar-btn toolbar-btn-dark" id="create-folder-btn">＋ Новая папка</button>
+            <input type="file" id="file-input" multiple hidden>
+          </div>
+          <div id="create-folder-form" class="create-folder-form" style="display:none">
+            <input type="text" id="folder-name-input" placeholder="Название папки">
+            <button type="button" class="btn btn-primary" id="create-folder-submit">Создать</button>
+            <button type="button" class="btn btn-outline" id="create-folder-cancel">Отмена</button>
+          </div>
+          <div id="files-breadcrumb" class="files-breadcrumb"></div>
+          <div id="files-list" class="files-grid-tiles"></div>
+          <p id="files-empty" class="empty-state">Нет файлов и папок</p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p>Курсовая работа &bull; Бэкенд-разработка &bull; Clean Architecture</p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

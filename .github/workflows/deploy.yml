@@ -1,0 +1,52 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Ships only the files the remote host needs to build/run the image.
+      # .env (secrets), .git, .venv, app/uploads and file_storage.db are
+      # deliberately never copied — the host's own .env (created once,
+      # manually, from .env.example) and its `data` volume are left alone.
+      - name: Copy application files to the deploy host
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          source: "main.py,app,static,requirements.txt,Dockerfile,docker-compose.yml,.dockerignore"
+          target: ${{ vars.DEPLOY_PATH }}
+          strip_components: 0
+
+      - name: Build and restart the container on the deploy host
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd "${{ vars.DEPLOY_PATH }}"
+            if [ ! -f .env ]; then
+              echo "::error::${{ vars.DEPLOY_PATH }}/.env is missing on the deploy host." \
+                   "Create it once from .env.example (with a real SECRET_KEY) before the first deploy."
+              exit 1
+            fi
+            docker compose up -d --build --remove-orphans
+            docker image prune -f
