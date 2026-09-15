@@ -17,7 +17,7 @@ services:
       DATABASE_URL: sqlite+aiosqlite:////data/file_storage.db
       STORAGE_ROOT: /data/uploads
     ports:
-      - "8080:8080"
+      - "8082:8080"
     volumes:
       - data:/data
     read_only: true
